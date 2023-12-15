@@ -6,38 +6,21 @@
 #         Last Modified: 2014/06/03
 # ========================================
 require "curses"
-
-# Cursesの初期化
-Curses.init_screen
+Curses.init_screen # Cursesの初期化
 begin
-  count = 0
-  # カーソルを非表示
-  Curses.curs_set(0)
+  Curses.curs_set(0) # カーソルを非表示
+  Curses.noecho # ユーザーの入力内容を画面に表示しない
 
-  # ユーザーの入力内容を画面に表示しない
-  Curses.noecho
-
-  while true
+  0.upto(Curses.cols - 1) do |i|
     Curses.clear
-    Curses.timeout = 50 # タイムアウトをミリ秒単位で設定（500ミリ秒＝0.5秒）
-
-    message = '🚃'
-    puts count
-
-    y =  Curses.lines / 2
-    x =  Curses.cols - message.length + count
+    train = '🚃🚃🚃🚃🚃🚃🚃🚃🚃🚃🚃'
+    y =  Curses.lines / 2 # 縦軸 中央表示
+    x =  Curses.cols - train.length * 2 - i # 横軸 右端から表示
     Curses.setpos(y, x)
-    Curses.addstr(message.to_s)
-
-    # 画面を更新して変更を反映
-    Curses.refresh
-
-    count -= 1
-
-    count = 0 if x <= 1
-
-    # ユーザーがなにかキーを押すまでプログラムを待機。
-    Curses.getch
+    Curses.addstr(train)
+    Curses.refresh # 画面を更新して変更を反映
+    sleep(0.1)
+    break if x <= 0 # 画面左まで到達したら終了
   end
 ensure
   Curses.close_screen
